@@ -1,13 +1,11 @@
 #自動検索ツール（mac用）
 #検索1.xlsxに乗った単語を任意のサイトで自動検索し表示してくれる（最大30語）
-#検索1.xlsxの単語は変えていい
+#検索1.xlsxの単語は任意で
 #ブラウザアプリのパス（ブラウザアプリのUNIX実行ファイルのパス）及び検索したいサイトのURLは任意で指定
 
 import subprocess
 from time import sleep
-import random
 import openpyxl
-#import pyautogui
 import tkinter
 
 
@@ -46,35 +44,27 @@ class NotebookSample(tkinter.Frame):
         Button1 = tkinter.Button(text='Yes!',command = self.launchEXCEL,font=("",20),bg = "aqua",fg = "black")
         Button1.pack()
 
-    def ManySearch(self):
+    def Search(self):
         # ブラウザで繰り返し自動検索する関数
-        # 調べたいサイトのURLをs1,s2,s3に分ける
+        # 調べたいサイトのURLをs1,s2,s3に分ける（Google仕様）
         # s1とs2、s2とs3の間に検索ワードを入れる
         s1 = "https://www.google.com/search?q="
         s2 = "&tbm=isch&ved=2ahUKEwjDjLGQuOnuAhWYAKYKHXCaB6wQ2-cCegQIABAA&oq="
         s3 = "&gs_lcp=CgNpbWcQAzIECCMQJ1BUWI8PYIESaAFwAHgAgAHRAogB6giSAQcwLjQuMS4xmAEAoAEBqgELZ3dzLXdpei1pbWfAAQE&sclient=img&ei=1h8pYMPJFJiBmAXwtJ7gCg&rlz=1C1EJFC_enJP888JP888"
-        if int(sheet['G8'].value) > 1:
-            for i in range(int(sheet['G8'].value - 1)):
-                V[i+1] = s1 + S[i+1] + s2 + S[0] + s3
-                subprocess.Popen(['ブラウザアプリのUNIX実行ファイルのパス',V[i+1]])
-                sleep(1)
-                sleep(random.uniform(float(sheet['D13'].value),float(sheet['E13'].value)))
+        for i in range(int(sheet['G8'].value)):
+            V[i] = s1 + S[i] + s2 + S[i] + s3
+            subprocess.Popen(['ブラウザアプリのUNIX実行ファイルのパス',V[i+1]])
+            sleep(5)
 
         # V[]が検索URL
         self.FinishWindow()
 
-    def FirstSearch(self,sheet):
-        # 検索結果表示
-        subprocess.Popen(['ブラウザアプリのUNIX実行ファイルのパス',V[0]])
-        sleep(3)
-        sleep(random.uniform(float(sheet['D13'].value),float(sheet['E13'].value)))
-        self.ManySearch()
 
     def Urldeta(self):
         # URL
         # 調べたいサイトのURLをs1,s2,s3に分ける
         # s1とs2、s2とs3の間に検索ワードを入れる
-        # 下ではgoogleのURL
+        # 下ではgoogleで検索
         s1 = "https://www.google.com/search?q="
         s2 = "&tbm=isch&ved=2ahUKEwjDjLGQuOnuAhWYAKYKHXCaB6wQ2-cCegQIABAA&oq="
         s3 = "&gs_lcp=CgNpbWcQAzIECCMQJ1BUWI8PYIESaAFwAHgAgAHRAogB6giSAQcwLjQuMS4xmAEAoAEBqgELZ3dzLXdpei1pbWfAAQE&sclient=img&ei=1h8pYMPJFJiBmAXwtJ7gCg&rlz=1C1EJFC_enJP888JP888"
@@ -98,7 +88,7 @@ class NotebookSample(tkinter.Frame):
     
         V ={}
         V[0] = s1 + S[0] + s2 + S[0] + s3
-        self.FirstSearch(sheet)
+        self.Search(sheet)
 
 
     def design(self):
